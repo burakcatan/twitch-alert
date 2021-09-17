@@ -20,7 +20,7 @@ const sounds = {
 const oscPresets = {
 	ColorEffect: {
 		activation: '/live/Control_Panel/cue/Color_Effect/activate',
-		deactivation: '/live/Control_Panel/cue/Color_Effect/activate'
+		deactivation: '/live/Control_Panel/cue/Color_Effect/deactivate'
 	}
 }		
 
@@ -28,9 +28,9 @@ const oscPresets = {
 // Functions
 
 const sendOscSignal = (oscObject, duration) => {
-	oscClient.send(oscObject.activationAddress, 0, () => {
+	oscClient.send(oscObject.activation, 0, () => {
 		setTimeout(()=>{
-			oscClient.send(oscObject.deactivationAddress, 0);
+			oscClient.send(oscObject.deactivation, 0);
 			}, duration);
 	});
 };
