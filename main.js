@@ -12,13 +12,6 @@ const client = new tmi.Client({
 
 client.connect();
 
-// Text Colors
-const color = {
-	sub: chalk.black.bgYellow,
-	gifter: chalk.black.bgMagenta,
-	raid: chalk.green,
-}
-
 // Sounds
 const sounds = {
 	blink: 'sounds/blink.mp3',
@@ -53,31 +46,31 @@ const playSound = (path) => {
 // Event listeners
 
 client.on("subscription", function (channel, username, methods ) {
-	console.log(`${color.sub(username)} abone oldu.`);
+	console.log(chalk.bold(username), chalk.yellow('abone oldu.'));
 	playSound(sounds.blink);
 	sendOscSignal(oscPresets.ColorEffect, 5000);
 });
 
 client.on("resub", function (channel, username, months, message, userstate, methods) {
-	console.log(`${color.sub(username)} abone oldu.`);
+	console.log(chalk.bold(username), chalk.yellow('abone oldu.'));
 	playSound(sounds.blink);
 	sendOscSignal(oscPresets.ColorEffect, 5000);
 });
 
 client.on('subgift',function (channel, username, streakMonths, recipient, methods, userstate) {
-    console.log(`${color.gifter(username)} has gifted subscription to ${color.sub(recipient)}!`);
+    console.log(chalk.bold(username), chalk.green('has gifted subscription to'), chalk.bold(recipient));
     playSound(sounds.success);
 	sendOscSignal(oscPresets.ColorEffect, 5000);
 });
 
 client.on('hosted', function(channel, username, viewers, autohost){
-    console.log(color.raid(`${username} has hosted the stream!`));
+    console.log(chalk.magenta(`${username} has hosted the stream!`));
 	playSound(sounds.success);
 	sendOscSignal(oscPresets.ColorEffect, 5000);
 });
 
 client.on('raided', function(channel, username, viewers){
-    console.log(color.raid(`${username} has raided the broadcast with ${viewers}!`));
+    console.log(chalk.magenta(`${username} has raided the broadcast with ${viewers}!`));
 	playSound(sounds.success);
 	sendOscSignal(oscPresets.ColorEffect, 5000);
 });
