@@ -1,14 +1,23 @@
 const tmi = require('tmi.js');
-var player = require('play-sound')(opts = {})
+const chalk = require('chalk');
+
+const player = require('play-sound')(opts = {})
 
 const { Client } = require('node-osc');
 const oscClient = new Client('127.0.0.1', 21600);
 
 const client = new tmi.Client({
-	channels: [ 'wtcn' ]
+	channels: [ 'koraybirand' ]
 });
 
 client.connect();
+
+// Text Colors
+const color = {
+	sub: chalk.black.bgYellow,
+	gifter: chalk.black.bgMagenta,
+	raid: chalk.green,
+}
 
 // Sounds
 const sounds = {
@@ -31,7 +40,7 @@ const sendOscSignal = (oscObject, duration) => {
 	oscClient.send(oscObject.activation, 0, () => {
 		setTimeout(()=>{
 			oscClient.send(oscObject.deactivation, 0);
-			}, duration);
+		}, duration);
 	});
 };
 
@@ -44,31 +53,31 @@ const playSound = (path) => {
 // Event listeners
 
 client.on("subscription", function (channel, username, methods ) {
-	console.log(`${username} abone oldu.`)
+	console.log(`${color.sub(username)} abone oldu.`);
 	playSound(sounds.blink);
 	sendOscSignal(oscPresets.ColorEffect, 5000);
 });
 
 client.on("resub", function (channel, username, months, message, userstate, methods) {
-	console.log(`${username} abone oldu.`)
+	console.log(`${color.sub(username)} abone oldu.`);
 	playSound(sounds.blink);
 	sendOscSignal(oscPresets.ColorEffect, 5000);
 });
 
 client.on('subgift',function (channel, username, streakMonths, recipient, methods, userstate) {
-    console.log(`${username} has gifted subscription to ${recipient}!`)
+    console.log(`${color.gifter(username)} has gifted subscription to ${color.sub(recipient)}!`);
     playSound(sounds.success);
 	sendOscSignal(oscPresets.ColorEffect, 5000);
 });
 
 client.on('hosted', function(channel, username, viewers, autohost){
-    console.log(`${username} has hosted the stream!`)
+    console.log(color.raid(`${username} has hosted the stream!`));
 	playSound(sounds.success);
 	sendOscSignal(oscPresets.ColorEffect, 5000);
 });
 
 client.on('raided', function(channel, username, viewers){
-    console.log(`${username} has raided the broadcast with ${viewers}!`)
+    console.log(color.raid(`${username} has raided the broadcast with ${viewers}!`));
 	playSound(sounds.success);
 	sendOscSignal(oscPresets.ColorEffect, 5000);
 });
